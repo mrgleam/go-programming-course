@@ -3,7 +3,6 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("vim-go")
 	next := incrementor()
 	fmt.Println(next())
 	fmt.Println(next())
