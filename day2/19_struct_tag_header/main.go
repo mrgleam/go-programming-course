@@ -8,7 +8,7 @@ import (
 )
 
 type Coupon struct {
-	ID string `query:"id"`
+	ID string `header:"id"`
 }
 
 func main() {
