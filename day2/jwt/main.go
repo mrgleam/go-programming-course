@@ -30,7 +30,7 @@ func login(c echo.Context) error {
 	// Set custom claims
 	claims := &jwtCustomClaims{
 		"Jon Snow",
-		true,
+		false,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
 		},
@@ -61,6 +61,17 @@ func restricted(c echo.Context) error {
 	return c.String(http.StatusOK, "Welcome "+name+"!")
 }
 
+func OnlyAdmin(h echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(*jwtCustomClaims)
+		if !claims.Admin {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized")
+		}
+		return h(c)
+	}
+}
+
 func main() {
 	e := echo.New()
 
@@ -86,6 +97,7 @@ func main() {
 		SigningKey:    []byte("secret"),
 	}
 	r.Use(echojwt.WithConfig(config))
+	r.Use(OnlyAdmin)
 	r.GET("", restricted)
 
 	e.Logger.Fatal(e.Start(":1323"))
