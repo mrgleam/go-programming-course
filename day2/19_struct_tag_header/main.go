@@ -36,6 +36,7 @@ func main() {
 }
 
 func getCouponsHandler(c echo.Context) error {
+	// Note that headers is not one of the included sources with Bind
 	var coupon Coupon
 
 	err := c.Bind(&coupon)
