@@ -3,6 +3,8 @@ package coupon
 import (
 	"net/http"
 
+	customValidate "final/validator"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,6 +20,13 @@ func CreateCouponHandler(gc createCoupon) echo.HandlerFunc {
 		if err := c.Bind(&coupon); err != nil {
 			return err
 		}
+
+		err := c.Validate(coupon)
+		mapErrs := customValidate.MapErrorMessage(err)
+		if len(mapErrs) > 0 {
+			return c.JSON(http.StatusBadRequest, mapErrs)
+		}
+
 		coupons := gc.Create(coupon)
 		return c.JSON(http.StatusOK, coupons)
 	}
