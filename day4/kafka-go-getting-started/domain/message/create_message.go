@@ -1,10 +1,12 @@
 package message
 
 import (
+	"errors"
+
 	"github.com/segmentio/kafka-go"
 )
 
-func CreateMessage(input []string) []kafka.Message {
+func CreateMessageNoKey(input []string) []kafka.Message {
 	msgs := []kafka.Message{}
 	for _, v := range input {
 		msgs = append(msgs, kafka.Message{
@@ -12,4 +14,29 @@ func CreateMessage(input []string) []kafka.Message {
 		})
 	}
 	return msgs
+}
+
+func CreateMessageWithMap(input map[string]string) []kafka.Message {
+	msgs := []kafka.Message{}
+	for k, v := range input {
+		msgs = append(msgs, kafka.Message{
+			Key:   []byte(k),
+			Value: []byte(v),
+		})
+	}
+	return msgs
+}
+
+func CreateMessageWithDupKey(keys []string, values []string) ([]kafka.Message, error) {
+	if len(keys) != len(values) {
+		return nil, errors.New("keys/values length not match")
+	}
+	msgs := []kafka.Message{}
+	for i, k := range keys {
+		msgs = append(msgs, kafka.Message{
+			Key:   []byte(k),
+			Value: []byte(values[i]),
+		})
+	}
+	return msgs, nil
 }

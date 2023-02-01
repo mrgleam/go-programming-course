@@ -30,14 +30,31 @@ func main() {
 	}
 
 	kafkaWriter := kafka.NewWriter(kafka.WriterConfig{
-		Brokers: []string{"pkc-ldvr1.asia-southeast1.gcp.confluent.cloud:9092"},
-		Topic:   "notification",
-		Dialer:  dialer,
+		Brokers:  []string{"pkc-ldvr1.asia-southeast1.gcp.confluent.cloud:9092"},
+		Topic:    "notification",
+		Dialer:   dialer,
+		Balancer: &kafka.Hash{},
 	})
 
-	defer kafkaWriter.Close()
+	defer func() {
+		if err := kafkaWriter.Close(); err != nil {
+			log.Fatalf("fatal error to close writer: %s\n", err)
+		}
+	}()
 
-	msgs := message.CreateMessage([]string{"This is 1st.", "This is 2nd"})
+	msgs := message.CreateMessageNoKey([]string{"This is 1st.", "This is 2nd"})
+	// msgs := message.CreateMessageWithMap(map[string]string{
+	// 	"1": "This is 1st.",
+	// 	"2": "This is 2nd",
+	// })
+
+	// msgs, err := message.CreateMessageWithDupKey(
+	// 	[]string{"3", "3"},
+	// 	[]string{"add to cart", "order confirm"},
+	// )
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
 
 	err := kafkaWriter.WriteMessages(ctx, msgs...)
 	if err != nil {

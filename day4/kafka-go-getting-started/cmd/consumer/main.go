@@ -56,7 +56,7 @@ func main() {
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			fmt.Printf("message at topic/partition/offset %v/%v/%v: %s = %s\n", m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
+			fmt.Printf("Consumed event from topic/partition/offset %v/%v/%v: %s = %s\n", m.Topic, m.Partition, m.Offset, string(m.Key), string(m.Value))
 			recordValue := m.Value
 			fmt.Println(string(recordValue))
 		}
