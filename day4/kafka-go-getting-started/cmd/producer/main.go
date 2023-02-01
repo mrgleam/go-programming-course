@@ -30,7 +30,7 @@ func main() {
 	}
 
 	kafkaWriter := kafka.NewWriter(kafka.WriterConfig{
-		Brokers:  []string{"pkc-ldvr1.asia-southeast1.gcp.confluent.cloud:9092"},
+		Brokers:  []string{cfg.KafkaURL},
 		Topic:    "notification",
 		Dialer:   dialer,
 		Balancer: &kafka.Hash{},
@@ -41,6 +41,18 @@ func main() {
 			log.Fatalf("fatal error to close writer: %s\n", err)
 		}
 	}()
+
+	// Example Send message with JSON
+	// {
+	// 	"ordertime": 1497014222380,
+	// 	"orderid": 18,
+	// 	"itemid": "Item_184",
+	// 	"address": {
+	// 		"city": "Mountain View",
+	// 		"state": "CA",
+	// 		"zipcode": 94041
+	// 	}
+	// }
 
 	msgs := message.CreateMessageNoKey([]string{"This is 1st.", "This is 2nd"})
 	// msgs := message.CreateMessageWithMap(map[string]string{

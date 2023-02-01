@@ -33,7 +33,7 @@ func main() {
 	}
 
 	reader := kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  []string{"pkc-ldvr1.asia-southeast1.gcp.confluent.cloud:9092"},
+		Brokers:  []string{cfg.KafkaURL},
 		Topic:    "notification",
 		GroupID:  "consumer-group-1",
 		MinBytes: 10e3, // 10KB
