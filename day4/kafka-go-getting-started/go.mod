@@ -3,6 +3,7 @@ module kafka-go-getting-started
 go 1.19
 
 require (
+	github.com/google/uuid v1.1.2
 	github.com/segmentio/kafka-go v0.4.38
 	github.com/spf13/viper v1.15.0
 )

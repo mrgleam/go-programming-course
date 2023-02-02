@@ -54,6 +54,16 @@ func main() {
 	// 	}
 	// }
 
+	// msg, err := message.CreateOrderMessage(shop.MockOrder)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
+	// err = kafkaWriter.WriteMessages(ctx, msg)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
 	msgs := message.CreateMessageNoKey([]string{"This is 1st.", "This is 2nd"})
 	// msgs := message.CreateMessageWithMap(map[string]string{
 	// 	"1": "This is 1st.",

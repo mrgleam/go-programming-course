@@ -1,7 +1,9 @@
 package message
 
 import (
+	"encoding/json"
 	"errors"
+	"kafka-go-getting-started/domain/shop"
 
 	"github.com/segmentio/kafka-go"
 )
@@ -39,4 +41,15 @@ func CreateMessageWithDupKey(keys []string, values []string) ([]kafka.Message, e
 		})
 	}
 	return msgs, nil
+}
+
+func CreateOrderMessage(o shop.Order) (kafka.Message, error) {
+	out, err := json.Marshal(&o)
+	if err != nil {
+		return kafka.Message{}, nil
+	}
+	return kafka.Message{
+		Key:   []byte(o.OrderID.String()),
+		Value: out,
+	}, nil
 }
